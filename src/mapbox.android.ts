@@ -1,6 +1,7 @@
 /// <reference path="./node_modules/tns-platform-declarations/android.d.ts" />
 /// <reference path="./platforms/ios/Mapbox.d.ts" />
 
+
 /**
 * Android Implementation 
 *
@@ -9,7 +10,6 @@
 
 import * as utils from "tns-core-modules/utils/utils";
 import * as application from "tns-core-modules/application";
-import { Frame, topmost } from "tns-core-modules/ui/frame";
 import * as fs from "tns-core-modules/file-system";
 import { Color } from "tns-core-modules/color";
 import * as http from "tns-core-modules/http";
@@ -559,7 +559,7 @@ export class Mapbox extends MapboxCommon implements MapboxApi {
 
   // the user location component
 
-  private _locationComponent : any = false;
+  private _locationComponent : any = null;
 
   /**
   * the permissionsManager
@@ -567,7 +567,7 @@ export class Mapbox extends MapboxCommon implements MapboxApi {
   * @link https://docs.mapbox.com/android/core/overview/#permissionsmanager
   */
 
-  private _permissionsManager : any = false
+  private _permissionsManager : any = null;
 
   // access token
 
@@ -1338,7 +1338,7 @@ export class Mapbox extends MapboxCommon implements MapboxApi {
   * Initialize our event handler shim so that we can intercept events here.
   *
   * @param { any } settings
-  * @param { MapboxView } mapboxView
+  * @param { MapboxView } mapboxNativeViewInstance
   */
 
   initEventHandlerShim( settings, mapboxNativeViewInstance : any ) {
@@ -1372,10 +1372,10 @@ export class Mapbox extends MapboxCommon implements MapboxApi {
   * Here we attempt to replicate the mapbox-gl-js behaviour of being
   * able to assign an onClick handler to a layer by it's layer id. 
   *
-  * @param {string} event - the event to subscribe to. i.e. 'click'. 
+  * @param {string} eventName - the event to subscribe to. i.e. 'click'.
   * @param {string} id - the id of the layer 
   * @param {function} callback - the callback to invoke when the layer is clicked on. 
-  * @param {object] nativeMapView - reference to the native Map view.
+  * @param {object} nativeMapView - reference to the native Map view.
   *
   * @link https://github.com/mapbox/mapbox-android-demo/issues/540
   */
@@ -3230,7 +3230,7 @@ export class Mapbox extends MapboxCommon implements MapboxApi {
   * other for it's click handling. 
   *
   * @param {object} style - a style following the Mapbox style specification.
-  * @param {any} nativeMapView - native map view (com.mapbox.mapboxsdk.maps.MapView)
+  * @param {any} nativeMapViewInstance - native map view (com.mapbox.mapboxsdk.maps.MapView)
   *
   * @return {Promise<any>}
   *
@@ -3440,7 +3440,7 @@ export class Mapbox extends MapboxCommon implements MapboxApi {
   * @todo this does not update the invisible clickable overlay.
   */
 
-  public addLinePoint( id : string, lnglat, nativeMapView? ) : Promise<any> {
+  public addLinePoint( id : string, lnglat) : Promise<any> {
 
     return new Promise((resolve, reject) => {
       try {
@@ -3556,7 +3556,7 @@ export class Mapbox extends MapboxCommon implements MapboxApi {
   * 'source': '<id of source>'
   *
   * @param {object} style a Mapbox style describing the circle draw. 
-  * @param {object} nativeMap view.
+  * @param {object} nativeMapViewInstance view.
   */
 
   private addCircleLayer( style, nativeMapViewInstance? ): Promise<any> {
